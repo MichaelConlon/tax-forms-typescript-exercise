@@ -14,7 +14,7 @@ import { addSubmission } from "../redux/submissions";
 type AppFieldProps = {
   label: string;
   name: string;
-
+  multiline?: boolean;
   // This line allows you to pass any styling options to the MaterialUI text
   // field that are allowed by TextField.
   sx?: ComponentProps<typeof TextField>["sx"];
@@ -26,9 +26,11 @@ const AppField: React.FC<AppFieldProps> = ({
   label,
   name,
   sx,
+  multiline = false,
 }) => {
   const [field, meta] = useField(name);
-  const value = field.value || "";
+  console.log(name,meta, field);
+  field.value = field.value || '';
 
   return (
     <TextField
@@ -37,12 +39,15 @@ const AppField: React.FC<AppFieldProps> = ({
       id={name}
       label={label}
       sx={sx}
+      multiline={multiline}
+      rows={multiline ? 5 : undefined}
       error={meta.touched && !!meta.error}
       helperText={meta.touched && meta.error}
       {...field}
     />
   );
 };
+
 
 
 export default function Listing() {
@@ -52,6 +57,7 @@ export default function Listing() {
   const dispatch = useAppDispatch();
 
   const handleSubmit = async (values: Submission) => {
+    console.log(values);
     try {
       const result = await requestExtension(values);
       dispatch(addSubmission(result));
@@ -68,8 +74,17 @@ export default function Listing() {
   }
 
   const initialValues: Submission = {
-    listing,
-    reason: "",
+    listing: {
+      ...listing,
+      mailingAddress: listing.mailingAddress || {
+        address1: '',
+        address2: '',
+        city: '',
+        state: '',
+        zip: ''
+      }
+    },
+    reason: ''
   };
 
   return (
@@ -84,10 +99,9 @@ export default function Listing() {
           validationSchema={SubmissionSchema}
           onSubmit={handleSubmit}
         >
-          {({ handleSubmit, isValid, dirty, isSubmitting }) => (
+          {({ handleSubmit, isSubmitting }) => (
             <Form onSubmit={handleSubmit}>
               <AppField label="Name" name="listing.name" />
-
               <Box sx={{ mt: 3 }}>
                 <Typography variant="h6">
                   Mailing Address
@@ -168,13 +182,14 @@ export default function Listing() {
                   <AppField
                     label="Reason"
                     name="reason"
+                    multiline
                   />
                 </Grid>
               </Box>
 
               <Box sx={{ mt: 3 }}>
                 <Button
-                  disabled={isSubmitting || !isValid || !dirty}
+                  disabled={isSubmitting}
                   variant="contained"
                   type="submit"
                 >

@@ -1,6 +1,5 @@
 import * as yup from "yup";
 
-
 export const AddressSchema = yup.object({
     address1: yup.string().required("Address is required").min(1),
     address2: yup.string().optional(),

@@ -1,13 +1,15 @@
 import React, { ComponentProps } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Formik, Form, useField } from "formik";
 import { Box, Button, Container, Grid, Paper, TextField, Typography } from "@mui/material";
-import * as yup from "yup";
 
 import { selectClaimedListingById } from "../redux/listings";
 import { useAppSelector } from "../lib/useAppSelector";
 import { Submission } from "../lib/applicationTypes";
 import { SubmissionSchema } from "../lib/validations";
+import { requestExtension } from "../lib/api";
+import { useAppDispatch } from "../lib/useAppSelector";
+import { addSubmission } from "../redux/submissions";
 
 type AppFieldProps = {
   label: string;
@@ -42,9 +44,22 @@ const AppField: React.FC<AppFieldProps> = ({
   );
 };
 
+
 export default function Listing() {
   const { id = null } = useParams();
   const listing = useAppSelector((state) => selectClaimedListingById(state, id))
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  const handleSubmit = async (values: Submission) => {
+    try {
+      const result = await requestExtension(values);
+      dispatch(addSubmission(result));
+      navigate('/submissions');
+    } catch (error) {
+      console.error('Failed to submit extension request:', error);
+    }
+  };
 
   if (!listing) {
     return (
@@ -54,6 +69,7 @@ export default function Listing() {
 
   const initialValues: Submission = {
     listing,
+    reason: "",
   };
 
   return (
@@ -66,101 +82,107 @@ export default function Listing() {
         <Formik
           initialValues={initialValues}
           validationSchema={SubmissionSchema}
-          onSubmit={() => {}}
+          onSubmit={handleSubmit}
         >
-          <Form>
-            <AppField label="Name" name="listing.name" />
+          {({ handleSubmit, isValid, dirty, isSubmitting }) => (
+            <Form onSubmit={handleSubmit}>
+              <AppField label="Name" name="listing.name" />
 
-            <Box sx={{ mt: 3 }}>
-              <Typography variant="h6">
-                Mailing Address
-              </Typography>
-              <Grid container spacing={2}>
-                <Grid item xs={3}>
-                  <AppField
-                    label="Address 1"
-                    name="listing.mailingAddress.address1"/>
+              <Box sx={{ mt: 3 }}>
+                <Typography variant="h6">
+                  Mailing Address
+                </Typography>
+                <Grid container spacing={2}>
+                  <Grid item xs={3}>
+                    <AppField
+                      label="Address 1"
+                      name="listing.mailingAddress.address1"/>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <AppField
+                      label="Address 2"
+                      name="listing.mailingAddress.address2"
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <AppField
+                      label="City"
+                      name="listing.mailingAddress.city"
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <AppField
+                      label="State"
+                      name="listing.mailingAddress.state"
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <AppField
+                      label="Zip"
+                      name="listing.mailingAddress.zip"
+                    />
+                  </Grid>
                 </Grid>
-                <Grid item xs={3}>
-                  <AppField
-                    label="Address 2"
-                    name="listing.mailingAddress.address2"
-                  />
-                </Grid>
-                <Grid item xs={2}>
-                  <AppField
-                    label="City"
-                    name="listing.mailingAddress.city"
-                  />
-                </Grid>
-                <Grid item xs={2}>
-                  <AppField
-                    label="State"
-                    name="listing.mailingAddress.state"
-                  />
-                </Grid>
-                <Grid item xs={2}>
-                  <AppField
-                    label="Zip"
-                    name="listing.mailingAddress.zip"
-                  />
-                </Grid>
-              </Grid>
-            </Box>
+              </Box>
 
-            <Box sx={{ mt: 3 }}>
-              <Typography variant="h6">
-                Physical Address
-              </Typography>
-              <Grid container spacing={2}>
-                <Grid item xs={3}>
-                  <AppField
-                    label="Address 1"
-                    name="listing.physicalAddress.address1"
-                  />
+              <Box sx={{ mt: 3 }}>
+                <Typography variant="h6">
+                  Physical Address
+                </Typography>
+                <Grid container spacing={2}>
+                  <Grid item xs={3}>
+                    <AppField
+                      label="Address 1"
+                      name="listing.physicalAddress.address1"
+                    />
+                  </Grid>
+                  <Grid item xs={3}>
+                    <AppField
+                      label="Address 2"
+                      name="listing.physicalAddress.address2"
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <AppField
+                      label="City"
+                      name="listing.physicalAddress.city"
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <AppField
+                      label="State"
+                      name="listing.physicalAddress.state"
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <AppField
+                      label="Zip"
+                      name="listing.physicalAddress.zip"
+                    />
+                  </Grid>
                 </Grid>
-                <Grid item xs={3}>
-                  <AppField
-                    label="Address 2"
-                    name="listing.physicalAddress.address2"
-                  />
-                </Grid>
-                <Grid item xs={2}>
-                  <AppField
-                    label="City"
-                    name="listing.physicalAddress.city"
-                  />
-                </Grid>
-                <Grid item xs={2}>
-                  <AppField
-                    label="State"
-                    name="listing.physicalAddress.state"
-                  />
-                </Grid>
-                <Grid item xs={2}>
-                  <AppField
-                    label="Zip"
-                    name="listing.physicalAddress.zip"
-                  />
-                </Grid>
-              </Grid>
-            </Box>
+              </Box>
 
-            <Box sx={{ mt: 3 }}>
-              <Grid item xs={12}>
-                <AppField
-                  label="Reason"
-                  name="reason"
-                />
-              </Grid>
-            </Box>
+              <Box sx={{ mt: 3 }}>
+                <Grid item xs={12}>
+                  <AppField
+                    label="Reason"
+                    name="reason"
+                  />
+                </Grid>
+              </Box>
 
-            <Box sx={{ mt: 3 }}>
-              <Button variant="contained" type="submit">
-                Submit Request
-              </Button>
-            </Box>
-          </Form>
+              <Box sx={{ mt: 3 }}>
+                <Button
+                  disabled={isSubmitting || !isValid || !dirty}
+                  variant="contained"
+                  type="submit"
+                >
+                   {isSubmitting ? 'Submitting...' : 'Submit'}
+                </Button>
+              </Box>
+            </Form>
+          )}
         </Formik>
       </Paper>
     </Container>

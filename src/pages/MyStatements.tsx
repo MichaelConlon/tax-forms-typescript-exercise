@@ -12,7 +12,9 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Button,
 } from '@mui/material';
+import { Link } from 'react-router-dom';
 import { APIResponse, Statement } from '../lib/applicationTypes';
 
 export default function MyStatements() {
@@ -24,6 +26,7 @@ export default function MyStatements() {
     if (!hasLoaded) {
       loadStatements().then((statements: APIResponse<Statement>) => {
         dispatch(addStatements(statements.data));
+        dispatch(setHasLoaded(true));
       });
     }
   }, [dispatch, hasLoaded]);
@@ -37,30 +40,42 @@ export default function MyStatements() {
       {statements.length === 0 ? (
         <Typography>No statements found.</Typography>
       ) : (
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Full Name</TableCell>
-                <TableCell>Email</TableCell>
-                <TableCell>Phone</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {statements.map((statement) => (
-                <TableRow key={statement.id}>
-                  <TableCell>{statement.name}</TableCell>
-                  <TableCell>
-                    {statement.contactInformation.firstName} {statement.contactInformation.lastName}
-                  </TableCell>
-                  <TableCell>{statement.contactInformation.email}</TableCell>
-                  <TableCell>{statement.contactInformation.phoneNumber}</TableCell>
+        <>
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Full Name</TableCell>
+                  <TableCell>Email</TableCell>
+                  <TableCell>Phone</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {statements.map((statement) => (
+                  <TableRow key={statement.id}>
+                    <TableCell>{statement.name}</TableCell>
+                    <TableCell>
+                      {statement.contactInformation.firstName} {statement.contactInformation.lastName}
+                    </TableCell>
+                    <TableCell>{statement.contactInformation.email}</TableCell>
+                    <TableCell>{statement.contactInformation.phoneNumber}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <Box sx={{ mt: 2 }}>
+            <Button
+              component={Link}
+              to="/statement"
+              variant="contained"
+              color="primary"
+            >
+              Add Statement
+            </Button>
+          </Box>
+        </>
       )}
     </Box>
   );

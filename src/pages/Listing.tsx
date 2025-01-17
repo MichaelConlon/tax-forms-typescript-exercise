@@ -1,7 +1,6 @@
-import React, { ComponentProps } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Formik, Form, useField } from "formik";
-import { Box, Button, Container, Grid, Paper, TextField, Typography } from "@mui/material";
+import { Formik, Form } from "formik";
+import { Box, Button, Container, Grid, Paper, Typography } from "@mui/material";
 
 import { selectClaimedListingById } from "../redux/listings";
 import { useAppSelector } from "../lib/useAppSelector";
@@ -10,45 +9,7 @@ import { SubmissionSchema } from "../lib/validations";
 import { requestExtension } from "../lib/api";
 import { useAppDispatch } from "../lib/useAppSelector";
 import { addSubmission } from "../redux/submissions";
-
-type AppFieldProps = {
-  label: string;
-  name: string;
-  multiline?: boolean;
-  // This line allows you to pass any styling options to the MaterialUI text
-  // field that are allowed by TextField.
-  sx?: ComponentProps<typeof TextField>["sx"];
-}
-
-// AppField is mostly a simple wrapper around MaterialUI's TextField, but
-// hooks into Formik. Just saves us allot of typing.
-const AppField: React.FC<AppFieldProps> = ({
-  label,
-  name,
-  sx,
-  multiline = false,
-}) => {
-  const [field, meta] = useField(name);
-  console.log(name,meta, field);
-  field.value = field.value || '';
-
-  return (
-    <TextField
-      fullWidth
-      variant="outlined"
-      id={name}
-      label={label}
-      sx={sx}
-      multiline={multiline}
-      rows={multiline ? 5 : undefined}
-      error={meta.touched && !!meta.error}
-      helperText={meta.touched && meta.error}
-      {...field}
-    />
-  );
-};
-
-
+import { AppField } from "../components/AppField";
 
 export default function Listing() {
   const { id = null } = useParams();

@@ -32,7 +32,6 @@ const statementsSlice = createSlice({
             state.statements.push(newStatement);
           }
         });
-        state.hasLoaded = true;
       },
       setHasLoaded: (state, action: PayloadAction<boolean>) => {
         state.hasLoaded = action.payload;

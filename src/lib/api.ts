@@ -69,14 +69,14 @@ export const updateStatement = (updatedStatement: unknown) => {
   return Promise.resolve(updatedStatement);
 };
 
-export const createStatement = (newStatement: any) => {
+export const createStatement = (newStatement: Statement) => {
   if (typeof newStatement !== "object" || !newStatement) {
     return Promise.reject("Invalid statement received");
   }
 
   const withId = {
-    id: uuidv4(),
     ...newStatement,
+    id: uuidv4(),
   };
 
   const newState = [

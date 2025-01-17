@@ -18,7 +18,6 @@ export default function Listing() {
   const dispatch = useAppDispatch();
 
   const handleSubmit = async (values: Submission) => {
-    console.log(values);
     try {
       const result = await requestExtension(values);
       dispatch(addSubmission(result));
@@ -38,6 +37,13 @@ export default function Listing() {
     listing: {
       ...listing,
       mailingAddress: listing.mailingAddress || {
+        address1: '',
+        address2: '',
+        city: '',
+        state: '',
+        zip: ''
+      },
+      physicalAddress: listing.physicalAddress || {
         address1: '',
         address2: '',
         city: '',

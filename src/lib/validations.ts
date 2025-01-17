@@ -46,6 +46,8 @@ export const SubmissionSchema = yup.object({
 
 // Contact Information Schema
 // If any of these fields are present, then the other fields are required
+// This wasn't a requirement but I thought it would be a fun little challenge to
+// see if I could make it work
 export const ContactInformationSchema = yup.object({
     firstName: yup.string().test('conditional-required', 'First Name is required', function(value: string | undefined): boolean {
         const { lastName, email, phoneNumber } = this.parent;

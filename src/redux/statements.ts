@@ -48,6 +48,9 @@ export const {
 export const selectStatements = ({ statements }: RootState) =>
     statements.statements;
 
+export const selectStatementById = ({ statements }: RootState, id: string | null) =>
+    statements.statements.find(statement => statement.id === id);
+
 export const selectHasLoaded = ({ statements }: RootState) =>
     statements.hasLoaded;
 

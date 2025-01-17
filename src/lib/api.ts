@@ -42,7 +42,7 @@ export const loadStatements = () => {
   );
 };
 
-export const updateStatement = (updatedStatement: unknown) => {
+export const updateStatement = (updatedStatement: Statement) => {
   if (typeof updatedStatement !== "object" || !updatedStatement) {
     return Promise.reject("Invalid statement received");
   }

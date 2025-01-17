@@ -42,6 +42,10 @@ const router = createBrowserRouter([
         path: "statement",
         element: <Statement />
       },
+      {
+        path: "statement/:id",
+        element: <Statement />
+      },
     ],
   },
 ]);

@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import listingsData from "../data/listings.json";
 import statementData from "../data/statements.json";
-import { Listing, Submission } from "./applicationTypes";
+import { Listing, Submission, Statement, APIResponse } from "./applicationTypes";
 
 /*\
 |* !!IMPORTANT!!
@@ -13,10 +13,6 @@ import { Listing, Submission } from "./applicationTypes";
 |* nothing here you are expected to add, and you are free to assume that all
 |* of these functions behave as expected.
 \*/
-
-type APIResponse<T> = {
-  data: T[];
-}
 
 export const loadListings = () => {
   return Promise.resolve(
@@ -42,7 +38,7 @@ let statementsApiState = statementData;
 
 export const loadStatements = () => {
   return Promise.resolve(
-    statementsApiState as APIResponse<unknown>,
+    statementsApiState as APIResponse<Statement>,
   );
 };
 

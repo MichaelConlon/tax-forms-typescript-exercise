@@ -29,3 +29,20 @@ export type Submission = {
   createdAt?: string;
   reason?: string;
 }
+
+export type ContactInformation = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+}
+
+export type Statement = {
+  id: string;
+  name: string;
+  contactInformation: ContactInformation;
+}
+
+export type APIResponse<T> = {
+  data: T[];
+}

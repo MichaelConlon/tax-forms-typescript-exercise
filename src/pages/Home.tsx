@@ -43,6 +43,13 @@ export default function Home() {
             >
               Submissions
             </Button>
+            <Button
+              component={Link}
+              to={"/statements"}
+              sx={{ my: 2, color: 'white', display: 'block' }}
+            >
+              My Statements
+            </Button>
           </Box>
         </Container>
       </AppBar>

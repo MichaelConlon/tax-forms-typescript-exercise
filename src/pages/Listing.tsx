@@ -2,10 +2,12 @@ import React, { ComponentProps } from "react";
 import { useParams } from "react-router-dom";
 import { Formik, Form, useField } from "formik";
 import { Box, Button, Container, Grid, Paper, TextField, Typography } from "@mui/material";
+import * as yup from "yup";
 
 import { selectClaimedListingById } from "../redux/listings";
 import { useAppSelector } from "../lib/useAppSelector";
 import { Submission } from "../lib/applicationTypes";
+import { SubmissionSchema } from "../lib/validations";
 
 type AppFieldProps = {
   label: string;
@@ -23,7 +25,7 @@ const AppField: React.FC<AppFieldProps> = ({
   name,
   sx,
 }) => {
-  const [field] = useField(name);
+  const [field, meta] = useField(name);
   const value = field.value || "";
 
   return (
@@ -33,6 +35,8 @@ const AppField: React.FC<AppFieldProps> = ({
       id={name}
       label={label}
       sx={sx}
+      error={meta.touched && !!meta.error}
+      helperText={meta.touched && meta.error}
       {...field}
     />
   );
@@ -61,6 +65,7 @@ export default function Listing() {
 
         <Formik
           initialValues={initialValues}
+          validationSchema={SubmissionSchema}
           onSubmit={() => {}}
         >
           <Form>
@@ -138,6 +143,15 @@ export default function Listing() {
                     name="listing.physicalAddress.zip"
                   />
                 </Grid>
+              </Grid>
+            </Box>
+
+            <Box sx={{ mt: 3 }}>
+              <Grid item xs={12}>
+                <AppField
+                  label="Reason"
+                  name="reason"
+                />
               </Grid>
             </Box>
 

@@ -29,6 +29,7 @@ export default function Submissions() {
           <Table>
             <TableHead>
               <TableRow>
+                <TableCell>Submitted At</TableCell>
                 <TableCell>Name</TableCell>
                 <TableCell>Address</TableCell>
                 <TableCell>City</TableCell>
@@ -44,6 +45,9 @@ export default function Submissions() {
 
                 return (
                   <TableRow key={submission.id}>
+                    <TableCell>
+                      {submission.createdAt ? new Date(submission.createdAt).toLocaleString('en-US') : "N/A"}
+                    </TableCell>
                     <TableCell>{listing.name}</TableCell>
                     <TableCell>{listing.physicalAddress.address1}</TableCell>
                     <TableCell>{listing.physicalAddress.city}</TableCell>
